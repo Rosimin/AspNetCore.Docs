@@ -352,21 +352,17 @@ message Status {
 
 ```csharp
 // Create dynamic values
-var boolValue = Value.ForBoolean(true);
-var listValue = Value.ForList(
-    Value.FromString("value1"),
-    Value.FromString("value2"));
-var structValue = Value.ForStruct(new Struct
+var status = new Status();
+status.Metadata = Value.FromStruct(new Struct
 {
     Fields =
     {
-        ["enabled"] = boolValue,
-        ["metadata"] = listValue
+        ["enabled"] = Value.ForBoolean(true),
+        ["metadata"] = Value.ForList(
+            Value.FromString("value1"),
+            Value.FromString("value2"))
     }
 });
-
-var status = new Status();
-status.Metadata = structValue;
 
 // Read dynamic values
 switch (status.Metadata.KindCase)
@@ -379,6 +375,24 @@ switch (status.Metadata.KindCase)
         break;
     // ...
 }
+```
+
+Using `Value` directly can be verbose. An alternative way to use `Value` is with Protobuf's built-in support for mapping messages to JSON. Protobuf's `JsonFormatter` and `JsonWriter` types can be used with any Protobuf message. `Value` is particularly well suited to being converted to and from JSON.
+
+This is the JSON equivalent of the previous code:
+
+```csharp
+// Create dynamic values from JSON
+var status = new Status();
+status.Metadata = Value.Parser.ParseJson(@"{
+    ""enabled"": true,
+    ""metadata"": [ ""value1"", ""value2"" ]
+}");
+
+// Convert dynamic values to JSON
+// JSON can be read with a library like System.Text.Json or Newtonsoft.Json
+var json = JsonFormatter.Default.Format(status.Metadata);
+var document = JsonDocument.Parse(json);
 ```
 
 ## Additional resources

@@ -12,7 +12,7 @@ uid: grpc/protobuf
 
 By [James Newton-King](https://twitter.com/jamesnk) and [Mark Rendle](https://twitter.com/markrendle)
 
-gRPC uses Protobuf as its interface definition language (IDL). Protobuf is a language neutral serialization format, and the messages sent and received by gRPC services are defined in *.proto* files. This document explains how Protobuf concepts map to .NET.
+gRPC uses Protobuf as its Interface Definition Language (IDL). Protobuf IDL is a language neutral format for specifying the messages sent and received by gRPC services. Protobuf messages are defined in *.proto* files. This document explains how Protobuf concepts map to .NET.
 
 ## Protobuf messages
 
@@ -30,7 +30,7 @@ message Person {
 }  
 ```
 
-The preceding message definition specifies three fields (name/value pairs). Like properties on .NET types, each field has a name and a type.
+The preceding message definition specifies three fields (name/value pairs). Like properties on .NET types, each field has a name and a type. The field type can be a [Protobuf scalar value type](#scalar-value-types), e.g. `int32`, or another message.
 
 In addition to a name, each field in the message definition has a unique number. Field numbers are used to identify fields when the message is serialized to Protobuf. Serializing a small number is faster than serializing the entire field name. Because field numbers identify a field it is important to take care when changing them. For more information about changing Protobuf messages see <xref:grpc/versioning>.
 
@@ -250,7 +250,7 @@ message Person {
 }
 ```
 
-In generated .NET code, `map` fields are represented by the `Google.Protobuf.Collections.MapField<TKey, TValue>` generic type. `RepeatedField<TKey, TValue>` implements <xref:System.Collections.Generic.IDictionary%602>. Like `repeated` fields, `map` properties don't have a public setter. Items should be added to the existing collection.
+In generated .NET code, `map` fields are represented by the `Google.Protobuf.Collections.MapField<TKey, TValue>` generic type. `RepeatedField<TKey, TValue>` implements <xref:System.Collections.Generic.IDictionary%602>. Like `repeated` properties, `map` properties don't have a public setter. Items should be added to the existing collection.
 
 ```csharp
 var person = new Person();
@@ -268,7 +268,7 @@ person.Attributes.Add(attributes);
 
 ## Unstructured and conditional messages
 
-Protobuf is a contract-first messaging format, and an apps messages need to be specified in *.proto* files when the app is compiled. For advanced scenarios, Protobuf offers language features and well known types to support conditional and unknown message.
+Protobuf is a contract-first messaging format, and an apps messages need to be specified in *.proto* files when the app is built. For advanced scenarios, Protobuf offers language features and well known types to support conditional and unknown messages.
 
 ### Any
 
